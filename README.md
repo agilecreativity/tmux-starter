@@ -4,24 +4,14 @@ The simple shell script that automate the tmux sessions the way I like it.
 See [this blog post](http://choomnuan.com/blog/2015/02/21/how-to-automate-your-tmux-sessions-using-simple-shell-script/)
 for more detail.
 
-### Why do I need this stuff
-
-- I am sick of adding tabs in iTerm e.g. Cmd-Tab is for chump!
-- When using the small monitor it makes sense to use one window per pane e.g. Macbook Air
-- When you have a bigger screen then you want ot have multiple panes per windows e.g. Macbook Air with external monitor
-- So first start with all one pane per window
-- Then use the magic of `:join-pane` command to stitch windows together
-- Or if you back to your small screen use `:break-pane -t :` as needed!
-- It is just a shell script, you may not have ruby installed in the server! but tmux is available!!
-  e.g. this is the case when you are on the client's site, tmux is installed, but hey may not be ruby! (thus tmuxinator is not an option!)
-- use of `$tmux source-file ~/.tmux.conf` to reload the config on the fly!
-
 ### Usage
 
 Please read the script and adjust the folowing information for your use.
-The script is very small.
+The script is very small and is very easy to customize to your specific need.
 
-You will need to at least change the following code (at the end of the script) to your specific project.
+TLDR;
+
+Adjust the command in the following location to your project and just run the script.
 
 ```sh
 # Note: main program {{{

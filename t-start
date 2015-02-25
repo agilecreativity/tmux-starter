@@ -68,6 +68,7 @@ set_base_environment $g_session_name
 
 kill-session $g_session_name
 
+## Note: adjust to your specific project!
 PROJECT_DIR='~/codes/exec-io/envisage'
 
 create-session 'redis-server' 'cd $PROJECT_DIR; redis-server'
