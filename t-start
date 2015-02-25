@@ -65,7 +65,6 @@ g_session_count=0
 kill_process 'sidekiq'
 kill_process 'bin/rails'
 kill_process 'redis-server'
-export PROJECT_DIR='~/codes/exec-io/envisage'
 set_base_environment $g_session_name
 
 kill-session $g_session_name
