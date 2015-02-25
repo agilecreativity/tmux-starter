@@ -1,0 +1,82 @@
+#!/bin/bash
+function kill_process() {
+  ps aux | grep -i "$1" | grep -v grep | awk '{print $2}' | xargs kill -9 2> /dev/null;
+}
+
+# Set the appropriate environment for a given project
+function set_base_environment() {
+  echo "FYI: set_base_environment()"
+  export PATH=$PATH
+  export SESSION_NAME=$1
+}
+
+# Wrapper function to kill existing tmux session
+function kill-session() {
+  tmux has-session -t $g_session_name 2> /dev/null
+  if [ "$?" -eq 0 ]
+  then
+    tmux kill-session -t $g_session_name
+  fi
+}
+
+# Create the new tmux session with a given name
+function create-session() {
+  window_name=$1
+  init_command=$2
+  tmux new-session -s $g_session_name -n "$window_name" -d
+  tmux send-keys   -t $g_session_name:1  "$init_command" C-m;
+  inc-session
+}
+
+# Add a single window to existing session
+function add-window() {
+  inc-session
+  window_name=$1
+  init_command=$2
+  tmux new-window -t $g_session_name:$g_session_count -n "$window_name"
+  tmux send-keys  -t $g_session_name:$g_session_count "$init_command" C-m;
+}
+
+# List session information
+function session-info() {
+  echo "Your session information"
+  echo $g_session_count
+  tmux ls
+}
+
+# Attach to existing specific session if any
+function attach-session() {
+  tmux attach-session -t $g_session_name
+}
+
+# Increment the global g_session_count
+function inc-session() {
+  ((g_session_count++))
+  tmux set-environment -t $g_session_name g_session_count $g_session_count
+}
+
+# Note: main program {{{
+g_session_name=$1
+# Use the default value if not specified
+: ${g_session_name:="rails-dev"}
+g_session_count=0
+
+kill_process 'sidekiq'
+kill_process 'bin/rails'
+kill_process 'redis-server'
+set_base_environment $g_session_name
+
+kill-session $g_session_name
+
+PROJECT_DIR='~/codes/exec-io/envisage'
+
+create-session 'redis-server' 'cd $PROJECT_DIR; redis-server'
+add-window 'sidekiq'          'cd $PROJECT_DIR; bundle exec sidekiq'
+add-window 'rails-console'    'cd $PROJECT_DIR; rails console'
+add-window 'rails-server'     'cd $PROJECT_DIR; rails server'
+add-window 'guard'            'cd $PROJECT_DIR; bundle exec guard'
+add-window 'editor'           'cd $PROJECT_DIR; vim'
+
+session-info
+attach-session
+## }}}
