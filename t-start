@@ -59,24 +59,23 @@ function inc-session() {
 g_session_name=$1
 # Use the default value if not specified
 : ${g_session_name:="rails-dev"}
+
 g_session_count=0
 
 kill_process 'sidekiq'
 kill_process 'bin/rails'
 kill_process 'redis-server'
+export PROJECT_DIR='~/codes/exec-io/envisage'
 set_base_environment $g_session_name
 
 kill-session $g_session_name
 
-## Note: adjust to your specific project!
-PROJECT_DIR='~/codes/exec-io/envisage'
-
-create-session 'redis-server' 'cd $PROJECT_DIR; redis-server'
-add-window 'sidekiq'          'cd $PROJECT_DIR; bundle exec sidekiq'
-add-window 'rails-console'    'cd $PROJECT_DIR; rails console'
-add-window 'rails-server'     'cd $PROJECT_DIR; rails server'
-add-window 'guard'            'cd $PROJECT_DIR; bundle exec guard'
-add-window 'editor'           'cd $PROJECT_DIR; vim'
+create-session 'redis-server' 'cd ~/codes/exec-io/envisage; redis-server'
+add-window 'sidekiq'          'cd ~/codes/exec-io/envisage; bundle exec sidekiq'
+add-window 'rails-console'    'cd ~/codes/exec-io/envisage; rails console'
+add-window 'rails-server'     'cd ~/codes/exec-io/envisage; rails server'
+add-window 'guard'            'cd ~/codes/exec-io/envisage; bundle exec guard'
+add-window 'editor'           'cd ~/codes/exec-io/envisage; vim .'
 
 session-info
 attach-session
